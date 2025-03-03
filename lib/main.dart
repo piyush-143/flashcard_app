@@ -1,6 +1,6 @@
 import 'package:flashcard_app/view/home_view.dart';
 import 'package:flashcard_app/view_model/db_provider.dart';
-import 'package:flashcard_app/widgets/custom_flashcard.dart';
+import 'package:flashcard_app/view_model/index_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,18 +17,20 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => DBProvider()),
+        ChangeNotifierProvider(create: (_) => IndexProvider()),
       ],
       child: SafeArea(
         child: MaterialApp(
-            title: 'Flutter Demo',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              useMaterial3: true,
-              primarySwatch: Colors.red,
-            ),
-            home: const HomeView()),
+          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            useMaterial3: true,
+            primarySwatch: Colors.red,
+          ),
+          home: const HomeView(),
+          //home: const CustomFlashCard(),
+        ),
       ),
-      // home: const CustomFlashCard(),
     );
   }
 }

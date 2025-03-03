@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DBProvider with ChangeNotifier {
   DBHelper dbRef = DBHelper.getInstance;
   List<Map<String, dynamic>> _allData = [];
-  List<Map<String, dynamic>> getNotes() => _allData;
+  List<Map<String, dynamic>> allData() => _allData;
 
   void getInitialData() async {
     await Future.delayed(const Duration(milliseconds: 10));
