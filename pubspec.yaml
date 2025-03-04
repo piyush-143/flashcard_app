@@ -40,6 +40,8 @@ dependencies:
   path: ^1.9.0
   path_provider: ^2.1.5
   flash_card: ^0.1.0
+  carousel_slider: ^5.0.0
+
 
 dev_dependencies:
   flutter_test:

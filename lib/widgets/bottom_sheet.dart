@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../database/local_database/db_helper.dart';
 import '../view_model/db_provider.dart';
+import 'custom_button.dart';
 
 class CustomBottomSheet extends StatefulWidget {
-  bool isUpdate;
+  bool isEdit;
   int sno;
   String que;
   String ans;
   CustomBottomSheet({
     super.key,
-    this.isUpdate = false,
+    this.isEdit = false,
     this.sno = 0,
     this.ans = "",
     this.que = "",
@@ -36,11 +37,11 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isUpdate) {
+    if (widget.isEdit) {
       queController.text = widget.que;
       ansController.text = widget.ans;
     }
-    return Container(
+    return SizedBox(
       height: 450,
       width: double.infinity,
       child: Padding(
@@ -48,7 +49,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
         child: Column(
           children: [
             Text(
-              widget.isUpdate ? 'Update FlashCard' : 'Add Flash Card',
+              widget.isEdit ? 'Edit FlashCard' : 'Add Flash Card',
               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
             ),
             const SizedBox(
@@ -60,7 +61,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                 children: [
                   TextFormField(
                     controller: queController,
-                    keyboardType: TextInputType.none,
+                    keyboardType: TextInputType.text,
                     cursorColor: Colors.black,
                     maxLines: 2,
                     decoration: const InputDecoration(
@@ -89,7 +90,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                   ),
                   TextFormField(
                     controller: ansController,
-                    keyboardType: TextInputType.none,
+                    keyboardType: TextInputType.text,
                     cursorColor: Colors.black,
                     maxLines: 2,
                     decoration: const InputDecoration(
@@ -120,47 +121,35 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
               height: 30,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(
-                  child: OutlinedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          widget.isUpdate
-                              ? context.read<DBProvider>().updateData(
-                                  ques: queController.text.toString(),
-                                  ans: ansController.text.toString(),
-                                  sno: widget.sno)
-                              : context.read<DBProvider>().addData(
-                                    ques: queController.text.toString(),
-                                    ans: ansController.text.toString(),
-                                  );
-                          Navigator.pop(context);
-                        }
-                      },
-                      style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.greenAccent,
-                          side: const BorderSide(color: Colors.black)),
-                      child: Text(
-                        widget.isUpdate ? "Update" : "Add",
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 19),
-                      )),
+                CustomButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      widget.isEdit
+                          ? context.read<DBProvider>().updateData(
+                              ques: queController.text.toString(),
+                              ans: ansController.text.toString(),
+                              sno: widget.sno)
+                          : context.read<DBProvider>().addData(
+                                ques: queController.text.toString(),
+                                ans: ansController.text.toString(),
+                              );
+                      Navigator.pop(context);
+                    }
+                  },
+                  bgColor: Colors.greenAccent,
+                  text: widget.isEdit ? "Save" : "Add",
                 ),
                 const SizedBox(
                   width: 30,
                 ),
-                Expanded(
-                  child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
-                          side: const BorderSide(color: Colors.black)),
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                      )),
+                CustomButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  text: "Cancel",
+                  bgColor: Colors.redAccent,
                 ),
               ],
             )
