@@ -13,14 +13,16 @@ class CustomDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           side: const BorderSide(color: Colors.black, width: 2)),
       content: SizedBox(
-        //width: 450,
+        //color: Colors.yellowAccent,
+        // width: 600,
         height: 150,
         child: Column(
-          spacing: 20,
+          spacing: 15,
           children: [
             const Text(
               "Are you sure you want to delete the flashcard ?",
-              style: TextStyle(fontSize: 23.5, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                  fontSize: 22, fontWeight: FontWeight.w600, height: 1.2),
               textAlign: TextAlign.center,
             ),
             Row(

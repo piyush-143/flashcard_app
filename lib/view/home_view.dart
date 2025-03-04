@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flashcard_app/view_model/db_provider.dart';
 import 'package:flashcard_app/view_model/index_provider.dart';
@@ -19,8 +21,8 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    context.read<DBProvider>().getInitialData();
   }
 
   @override
@@ -49,20 +51,23 @@ class _HomeViewState extends State<HomeView> {
               textAlign: TextAlign.center,
             ))
           : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
                 CarouselSlider.builder(
                   //carouselController: carouselSliderController,
                   options: CarouselOptions(
-                      onPageChanged: (index, reason) {
-                        context.read<IndexProvider>().updateIdx(index);
-                      },
-                      height: 340,
-                      enlargeCenterPage: true,
-                      enlargeStrategy: CenterPageEnlargeStrategy.height,
-                      enlargeFactor: 0.4,
-                      viewportFraction: 0.76,
-                      enableInfiniteScroll: false),
+                    onPageChanged: (index, reason) {
+                      context.read<IndexProvider>().updateIdx(index);
+                    },
+                    height: 340,
+                    enlargeCenterPage: true,
+                    enlargeStrategy: CenterPageEnlargeStrategy.height,
+                    enlargeFactor: 0.4,
+                    viewportFraction: 0.76,
+                  ),
                   itemCount: providerData.length,
                   itemBuilder: (ctx, index, realIndex) {
                     return CustomFlashCard(
@@ -96,6 +101,7 @@ class _HomeViewState extends State<HomeView> {
                       onPressed: () {
                         showModalBottomSheet(
                           context: context,
+                          elevation: 3,
                           builder: (context) {
                             return CustomBottomSheet(
                               isEdit: true,
@@ -114,7 +120,7 @@ class _HomeViewState extends State<HomeView> {
               ],
             ),
       floatingActionButton: Align(
-        alignment: const Alignment(0.8, 0.94),
+        alignment: const Alignment(0.9, 0.94),
         child: FloatingActionButton(
           onPressed: () {
             showModalBottomSheet(
@@ -133,9 +139,9 @@ class _HomeViewState extends State<HomeView> {
           },
           shape: RoundedRectangleBorder(
               side: const BorderSide(color: Colors.black),
-              borderRadius: BorderRadius.circular(15)),
+              borderRadius: BorderRadius.circular(10)),
           backgroundColor: Colors.greenAccent,
-          child: Icon(
+          child: const Icon(
             Icons.add,
             size: 35,
             color: Colors.black87,

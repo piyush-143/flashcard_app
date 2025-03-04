@@ -36,16 +36,20 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // TODO: implement initState
+    super.initState();
     if (widget.isEdit) {
       queController.text = widget.que;
       ansController.text = widget.ans;
     }
-    return SizedBox(
-      height: 450,
-      width: double.infinity,
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
         child: Column(
           children: [
             Text(
@@ -53,7 +57,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
             ),
             const SizedBox(
-              height: 20,
+              height: 5,
             ),
             Form(
               key: _formKey,
@@ -86,7 +90,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                     },
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   TextFormField(
                     controller: ansController,
@@ -118,7 +122,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
               ),
             ),
             const SizedBox(
-              height: 30,
+              height: 10,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -18,12 +18,12 @@ class CustomButton extends StatelessWidget {
           backgroundColor: bgColor,
           // shape:
           //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          fixedSize: const Size(120, 20),
+          fixedSize: const Size(110, 20),
           side: const BorderSide(color: Colors.black)),
       child: Text(
         text,
         style: const TextStyle(
-            fontSize: 20, color: Colors.black, fontWeight: FontWeight.w600),
+            fontSize: 19, color: Colors.black, fontWeight: FontWeight.w600),
       ),
     );
   }

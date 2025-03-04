@@ -31,9 +31,18 @@ class DBHelper {
       db.execute(
         "create table $tableName ( $columnSno integer primary key autoincrement, $columnQuestion text, $columnAnswer text)",
       );
-      await db.insert(tableName, {columnQuestion: "1", columnAnswer: "1"});
-      await db.insert(tableName, {columnQuestion: "2", columnAnswer: "2"});
-      await db.insert(tableName, {columnQuestion: "3", columnAnswer: "3"});
+      await db.insert(tableName, {
+        columnQuestion: "Flutter is developed by which organisation",
+        columnAnswer: "Google"
+      });
+      await db.insert(tableName, {
+        columnQuestion: "Async and Await keyword are used for what",
+        columnAnswer: "Asynchronous Programming"
+      });
+      await db.insert(tableName, {
+        columnQuestion: "Which function is executed before build method",
+        columnAnswer: "initState(){}"
+      });
     }, version: 1);
   }
 

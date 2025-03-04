@@ -29,14 +29,16 @@ class CustomFlashCard extends StatelessWidget {
         child: Consumer<DBProvider>(
           builder: (BuildContext ctx, DBProvider value, Widget? child) =>
               Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(15.0),
             child: Text(
               isQue
                   ? "Question:\n${value.allData()[index][DBHelper.columnQuestion]}?"
                   : "Answer:\n${value.allData()[index][DBHelper.columnAnswer]}.",
               style: const TextStyle(
                   color: Colors.black,
-                  fontSize: 22,
+                  fontSize: 20,
+                  letterSpacing: 0.4,
+                  height: 1.2,
                   fontWeight: FontWeight.w700),
               textAlign: TextAlign.center,
             ),
