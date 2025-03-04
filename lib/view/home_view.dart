@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flashcard_app/view_model/db_provider.dart';
 import 'package:flashcard_app/view_model/index_provider.dart';
@@ -23,6 +21,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    context.read<DBProvider>().getInitialData();
   }
 
   @override
@@ -67,6 +66,7 @@ class _HomeViewState extends State<HomeView> {
                     enlargeStrategy: CenterPageEnlargeStrategy.height,
                     enlargeFactor: 0.4,
                     viewportFraction: 0.76,
+                    enableInfiniteScroll: false,
                   ),
                   itemCount: providerData.length,
                   itemBuilder: (ctx, index, realIndex) {
@@ -102,6 +102,8 @@ class _HomeViewState extends State<HomeView> {
                         showModalBottomSheet(
                           context: context,
                           elevation: 3,
+                          isScrollControlled: true,
+                          constraints: const BoxConstraints(maxHeight: 550),
                           builder: (context) {
                             return CustomBottomSheet(
                               isEdit: true,
@@ -128,6 +130,9 @@ class _HomeViewState extends State<HomeView> {
               builder: (context) {
                 return CustomBottomSheet();
               },
+              isScrollControlled: true,
+              elevation: 3,
+              constraints: const BoxConstraints(maxHeight: 550),
               shape: const RoundedRectangleBorder(
                 side: BorderSide(color: Colors.black),
                 borderRadius: BorderRadius.only(

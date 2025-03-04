@@ -1,12 +1,14 @@
 import 'package:flashcard_app/database/local_database/db_helper.dart';
 import 'package:flashcard_app/view_model/db_provider.dart';
+import 'package:flashcard_app/view_model/index_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_card/flash_card.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class CustomFlashCard extends StatelessWidget {
-  final int index;
-  const CustomFlashCard({super.key, required this.index});
+  int index;
+  CustomFlashCard({super.key, required this.index});
 
   @override
   Widget build(BuildContext context) {
