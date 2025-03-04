@@ -1,0 +1,2 @@
+C:/Users/91843/Desktop/Flutter projects/flashcard_app/android/app/.cxx/RelWithDebInfo/3xq23z4q/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/91843/Desktop/Flutter projects/flashcard_app/android/app/.cxx/RelWithDebInfo/3xq23z4q/armeabi-v7a/CMakeFiles/rebuild_cache.dir

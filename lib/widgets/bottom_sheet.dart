@@ -5,11 +5,11 @@ import '../view_model/db_provider.dart';
 import 'custom_button.dart';
 
 class CustomBottomSheet extends StatefulWidget {
-  bool isEdit;
-  int sno;
-  String que;
-  String ans;
-  CustomBottomSheet({
+  final bool isEdit;
+  final int sno;
+  final String que;
+  final String ans;
+  const CustomBottomSheet({
     super.key,
     this.isEdit = false,
     this.sno = 0,
@@ -22,8 +22,8 @@ class CustomBottomSheet extends StatefulWidget {
 }
 
 class _CustomBottomSheetState extends State<CustomBottomSheet> {
-  TextEditingController queController = TextEditingController();
-  TextEditingController ansController = TextEditingController();
+  final TextEditingController _queController = TextEditingController();
+  final TextEditingController _ansController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   DBHelper? dbRef;
 
@@ -31,8 +31,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    queController.dispose();
-    ansController.dispose();
+    _queController.dispose();
+    _ansController.dispose();
   }
 
   @override
@@ -40,8 +40,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
     // TODO: implement initState
     super.initState();
     if (widget.isEdit) {
-      queController.text = widget.que;
-      ansController.text = widget.ans;
+      _queController.text = widget.que;
+      _ansController.text = widget.ans;
     }
   }
 
@@ -55,15 +55,13 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
             widget.isEdit ? 'Edit FlashCard' : 'Add Flash Card',
             style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
           ),
-          const SizedBox(
-            height: 5,
-          ),
+          const SizedBox(height: 5),
           Form(
             key: _formKey,
             child: Column(
               children: [
                 TextFormField(
-                  controller: queController,
+                  controller: _queController,
                   keyboardType: TextInputType.text,
                   cursorColor: Colors.black,
                   maxLines: 2,
@@ -82,17 +80,12 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                             BorderSide(color: Colors.greenAccent, width: 3)),
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Question not entered!!!";
-                    }
-                    return null;
+                    return value!.isEmpty ? "Question not entered!!!" : null;
                   },
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 TextFormField(
-                  controller: ansController,
+                  controller: _ansController,
                   keyboardType: TextInputType.text,
                   cursorColor: Colors.black,
                   maxLines: 2,
@@ -111,18 +104,13 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                             BorderSide(color: Colors.greenAccent, width: 3)),
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Answer not entered!!!";
-                    }
-                    return null;
+                    return value!.isEmpty ? "Question not entered!!!" : null;
                   },
                 ),
               ],
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -131,12 +119,12 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                   if (_formKey.currentState!.validate()) {
                     widget.isEdit
                         ? context.read<DBProvider>().updateData(
-                            ques: queController.text.toString(),
-                            ans: ansController.text.toString(),
+                            ques: _queController.text,
+                            ans: _ansController.text,
                             sno: widget.sno)
                         : context.read<DBProvider>().addData(
-                              ques: queController.text.toString(),
-                              ans: ansController.text.toString(),
+                              ques: _queController.text,
+                              ans: _ansController.text,
                             );
                     Navigator.pop(context);
                   }
@@ -144,9 +132,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                 bgColor: Colors.greenAccent,
                 text: widget.isEdit ? "Save" : "Add",
               ),
-              const SizedBox(
-                width: 30,
-              ),
+              const SizedBox(width: 30),
               CustomButton(
                 onPressed: () {
                   Navigator.pop(context);

@@ -12,15 +12,14 @@ class DBHelper {
   static const String columnQuestion = "Question";
   static const String columnAnswer = "Answer";
   static const String columnSno = "S_No";
-  Database? myDB;
+  Database? _myDB;
 
   Future<Database> getDB() async {
-    if (myDB != null) {
-      return myDB!;
-    } else {
-      myDB = await openDB();
-      return myDB!;
+    if (_myDB != null) {
+      return _myDB!;
     }
+    _myDB = await openDB();
+    return _myDB!;
   }
 
   Future<Database> openDB() async {

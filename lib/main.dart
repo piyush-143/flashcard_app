@@ -19,17 +19,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DBProvider()),
         ChangeNotifierProvider(create: (_) => IndexProvider()),
       ],
-      child: SafeArea(
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            useMaterial3: true,
-            primarySwatch: Colors.red,
-          ),
-          home: const HomeView(),
-          //home: const CustomFlashCard(),
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          useMaterial3: true,
+          primarySwatch: Colors.red,
         ),
+        home: const SafeArea(child: HomeView()),
+        //home: const CustomFlashCard(),
       ),
     );
   }

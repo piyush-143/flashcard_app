@@ -1,14 +1,12 @@
 import 'package:flashcard_app/database/local_database/db_helper.dart';
 import 'package:flashcard_app/view_model/db_provider.dart';
-import 'package:flashcard_app/view_model/index_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flash_card/flash_card.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class CustomFlashCard extends StatelessWidget {
-  int index;
-  CustomFlashCard({super.key, required this.index});
+  final int index;
+  const CustomFlashCard({super.key, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +32,8 @@ class CustomFlashCard extends StatelessWidget {
             padding: const EdgeInsets.all(15.0),
             child: Text(
               isQue
-                  ? "Question:\n${value.allData()[index][DBHelper.columnQuestion]}?"
-                  : "Answer:\n${value.allData()[index][DBHelper.columnAnswer]}.",
+                  ? "Question:\n${value.allData[index][DBHelper.columnQuestion]}?"
+                  : "Answer:\n${value.allData[index][DBHelper.columnAnswer]}.",
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 20,

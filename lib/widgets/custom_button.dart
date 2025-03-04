@@ -4,11 +4,12 @@ class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
   final Color bgColor;
   final String text;
-  const CustomButton(
-      {super.key,
-      required this.onPressed,
-      required this.bgColor,
-      required this.text});
+  const CustomButton({
+    super.key,
+    required this.onPressed,
+    required this.bgColor,
+    required this.text,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +17,6 @@ class CustomButton extends StatelessWidget {
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
           backgroundColor: bgColor,
-          // shape:
-          //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           fixedSize: const Size(110, 20),
           side: const BorderSide(color: Colors.black)),
       child: Text(

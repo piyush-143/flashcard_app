@@ -21,14 +21,16 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    context.read<DBProvider>().getInitialData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DBProvider>().getInitialData();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    int idx = context.watch<IndexProvider>().idx;
+    int idxProvider = context.watch<IndexProvider>().idx;
     List<Map<String, dynamic>> providerData =
-        context.watch<DBProvider>().allData();
+        context.watch<DBProvider>().allData;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -42,19 +44,18 @@ class _HomeViewState extends State<HomeView> {
       body: providerData.isEmpty
           ? const Center(
               child: Text(
-              'Empty!\nAdd some FlashCard',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w600),
-              textAlign: TextAlign.center,
-            ))
+                'Empty!\nAdd some FlashCard',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600),
+                textAlign: TextAlign.center,
+              ),
+            )
           : Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 CarouselSlider.builder(
                   //carouselController: carouselSliderController,
                   options: CarouselOptions(
@@ -70,9 +71,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   itemCount: providerData.length,
                   itemBuilder: (ctx, index, realIndex) {
-                    return CustomFlashCard(
-                      index: index,
-                    );
+                    return CustomFlashCard(index: index);
                   },
                 ),
                 const SizedBox(height: 10),
@@ -87,7 +86,8 @@ class _HomeViewState extends State<HomeView> {
                             return CustomDialog(
                               onPress: () {
                                 context.read<DBProvider>().deleteData(
-                                    sno: providerData[idx][DBHelper.columnSno]);
+                                    sno: providerData[idxProvider]
+                                        [DBHelper.columnSno]);
                                 Navigator.pop(context);
                               },
                             );
@@ -107,9 +107,12 @@ class _HomeViewState extends State<HomeView> {
                           builder: (context) {
                             return CustomBottomSheet(
                               isEdit: true,
-                              que: providerData[idx][DBHelper.columnQuestion],
-                              ans: providerData[idx][DBHelper.columnAnswer],
-                              sno: providerData[idx][DBHelper.columnSno],
+                              que: providerData[idxProvider]
+                                  [DBHelper.columnQuestion],
+                              ans: providerData[idxProvider]
+                                  [DBHelper.columnAnswer],
+                              sno: providerData[idxProvider]
+                                  [DBHelper.columnSno],
                             );
                           },
                         );

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'custom_button.dart';
 
 class CustomDialog extends StatelessWidget {
-  VoidCallback onPress;
-  CustomDialog({super.key, required this.onPress});
+  final VoidCallback onPress;
+  const CustomDialog({super.key, required this.onPress});
 
   @override
   Widget build(BuildContext context) {
