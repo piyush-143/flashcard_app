@@ -5,6 +5,7 @@ import 'package:flashcard_app/widgets/custom_dialog.dart';
 import 'package:flashcard_app/widgets/custom_flashcard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../database/local_database/db_helper.dart';
 import '../widgets/bottom_sheet.dart';
 import '../widgets/custom_button.dart';
@@ -29,7 +30,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     int idxProvider = context.watch<IndexProvider>().idx;
-    List<Map<String, dynamic>> providerData =
+    List<Map<String, dynamic>> dataProvider =
         context.watch<DBProvider>().allData;
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +42,7 @@ class _HomeViewState extends State<HomeView> {
         backgroundColor: Colors.greenAccent,
         toolbarHeight: 65,
       ),
-      body: providerData.isEmpty
+      body: dataProvider.isEmpty
           ? const Center(
               child: Text(
                 'Empty!\nAdd some FlashCard',
@@ -57,7 +58,6 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 const SizedBox(height: 20),
                 CarouselSlider.builder(
-                  //carouselController: carouselSliderController,
                   options: CarouselOptions(
                     onPageChanged: (index, reason) {
                       context.read<IndexProvider>().updateIdx(index);
@@ -69,7 +69,7 @@ class _HomeViewState extends State<HomeView> {
                     viewportFraction: 0.76,
                     enableInfiniteScroll: false,
                   ),
-                  itemCount: providerData.length,
+                  itemCount: dataProvider.length,
                   itemBuilder: (ctx, index, realIndex) {
                     return CustomFlashCard(index: index);
                   },
@@ -86,7 +86,7 @@ class _HomeViewState extends State<HomeView> {
                             return CustomDialog(
                               onPress: () {
                                 context.read<DBProvider>().deleteData(
-                                    sno: providerData[idxProvider]
+                                    sno: dataProvider[idxProvider]
                                         [DBHelper.columnSno]);
                                 Navigator.pop(context);
                               },
@@ -107,11 +107,11 @@ class _HomeViewState extends State<HomeView> {
                           builder: (context) {
                             return CustomBottomSheet(
                               isEdit: true,
-                              que: providerData[idxProvider]
+                              que: dataProvider[idxProvider]
                                   [DBHelper.columnQuestion],
-                              ans: providerData[idxProvider]
+                              ans: dataProvider[idxProvider]
                                   [DBHelper.columnAnswer],
-                              sno: providerData[idxProvider]
+                              sno: dataProvider[idxProvider]
                                   [DBHelper.columnSno],
                             );
                           },
@@ -131,7 +131,7 @@ class _HomeViewState extends State<HomeView> {
             showModalBottomSheet(
               context: context,
               builder: (context) {
-                return CustomBottomSheet();
+                return const CustomBottomSheet();
               },
               isScrollControlled: true,
               elevation: 3,
