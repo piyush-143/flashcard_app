@@ -1,8 +1,10 @@
-import '../database/local_database/db_helper.dart';
 import 'package:flutter/material.dart';
+
+import '../database/local_database/db_helper.dart';
 
 class DBProvider with ChangeNotifier {
   final DBHelper _dbRef = DBHelper.getInstance;
+
   List<Map<String, dynamic>> _allData = [];
   List<Map<String, dynamic>> get allData => _allData;
 

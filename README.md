@@ -11,6 +11,14 @@ A Flutter application for creating, reading, updating, and deleting flashcards. 
 * **Local Database:** Stores all flashcard data locally on your device using `sqflite`.
 * **State Management:** Implements the `provider` package for a clean and scalable approach to managing the application's state.
 
+
+## Technologies Used
+
+* **Flutter:** Google's UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase.
+* **sqflite:** A Flutter plugin for SQLite, providing local database storage.
+* **provider:** A popular Flutter package for simple and testable state management.
+
+
 ## Usage
 
 Describe how users can interact with your application. For example:
@@ -22,11 +30,6 @@ Describe how users can interact with your application. For example:
 5.  Swipe through the list of flashcards to view them.
 6.  Tap and hold a flashcard to see options for editing or deleting.
 
-## Technologies Used
-
-* **Flutter:** Google's UI toolkit for building natively compiled applications for mobile, web, and desktop from a single codebase.
-* **sqflite:** A Flutter plugin for SQLite, providing local database storage.
-* **provider:** A popular Flutter package for simple and testable state management.
 
 ## Contributing
 

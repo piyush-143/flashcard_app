@@ -20,14 +20,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => IndexProvider()),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'FlashCard App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
           primarySwatch: Colors.red,
         ),
         home: const SafeArea(child: HomeView()),
-        //home: const CustomFlashCard(),
       ),
     );
   }
