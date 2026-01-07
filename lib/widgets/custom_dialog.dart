@@ -13,11 +13,9 @@ class CustomDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           side: const BorderSide(color: Colors.black, width: 2)),
       content: SizedBox(
-        //color: Colors.yellowAccent,
-        // width: 600,
         height: 150,
         child: Column(
-          spacing: 15,
+          spacing: 25,
           children: [
             const Text(
               "Are you sure you want to delete the flashcard ?",

@@ -1,14 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flashcard_app/view_model/db_provider.dart';
-import 'package:flashcard_app/view_model/index_provider.dart';
-import 'package:flashcard_app/widgets/custom_dialog.dart';
-import 'package:flashcard_app/widgets/custom_flashcard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../database/local_database/db_helper.dart';
-import '../widgets/bottom_sheet.dart';
+import '../view_model/db_provider.dart';
+import '../view_model/index_provider.dart';
+import '../widgets/custom_bottom_sheet.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/custom_dialog.dart';
+import '../widgets/custom_flashcard.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -18,13 +18,29 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  // Use CarouselSliderController for v5+, or CarouselController for older versions
+  final CarouselSliderController _carouselController =
+      CarouselSliderController();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    // Use microtask to schedule the data fetch safely after the current frame
+    Future.microtask(() {
       context.read<DBProvider>().getInitialData();
     });
+  }
+
+  void _showSnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        margin: const EdgeInsets.all(10),
+      ),
+    );
   }
 
   @override
@@ -32,129 +48,213 @@ class _HomeViewState extends State<HomeView> {
     int idxProvider = context.watch<IndexProvider>().idx;
     List<Map<String, dynamic>> dataProvider =
         context.watch<DBProvider>().allData;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "FlashCard App",
-          style: TextStyle(fontSize: 33, fontWeight: FontWeight.w600),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.greenAccent,
-        toolbarHeight: 65,
+        title: const Text("FlashCards"),
       ),
       body: dataProvider.isEmpty
-          ? const Center(
-              child: Text(
-                'Empty!\nAdd some FlashCard',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.library_books_outlined,
+                      size: 100, color: Colors.indigo.withOpacity(0.3)),
+                  const SizedBox(height: 20),
+                  Text(
+                    'No Flashcards Yet!',
+                    style: TextStyle(
+                      color: Colors.indigo[900],
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Tap the + button to create one.',
+                    style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                  ),
+                ],
               ),
             )
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                CarouselSlider.builder(
-                  options: CarouselOptions(
-                    onPageChanged: (index, reason) {
-                      context.read<IndexProvider>().updateIdx(index);
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 30),
+                  CarouselSlider.builder(
+                    carouselController: _carouselController,
+                    itemCount: dataProvider.length,
+                    itemBuilder: (context, index, realIndex) {
+                      return CustomFlashCard(index: index);
                     },
-                    height: 340,
-                    enlargeCenterPage: true,
-                    enlargeStrategy: CenterPageEnlargeStrategy.height,
-                    enlargeFactor: 0.4,
-                    viewportFraction: 0.76,
-                    enableInfiniteScroll: false,
-                  ),
-                  itemCount: dataProvider.length,
-                  itemBuilder: (ctx, index, realIndex) {
-                    return CustomFlashCard(index: index);
-                  },
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    CustomButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return CustomDialog(
-                              onPress: () {
-                                context.read<DBProvider>().deleteData(
-                                    sno: dataProvider[idxProvider]
-                                        [DBHelper.columnSno]);
-                                Navigator.pop(context);
-                              },
-                            );
-                          },
-                        );
+                    options: CarouselOptions(
+                      height: 400,
+                      viewportFraction: 8,
+                      enlargeCenterPage: true,
+                      initialPage: idxProvider,
+                      onPageChanged: (index, reason) {
+                        context.read<IndexProvider>().updateIdx(index);
                       },
-                      text: "Delete",
-                      bgColor: Colors.redAccent,
                     ),
-                    CustomButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          elevation: 3,
-                          isScrollControlled: true,
-                          constraints: const BoxConstraints(maxHeight: 550),
-                          builder: (context) {
-                            return CustomBottomSheet(
-                              isEdit: true,
-                              que: dataProvider[idxProvider]
-                                  [DBHelper.columnQuestion],
-                              ans: dataProvider[idxProvider]
-                                  [DBHelper.columnAnswer],
-                              sno: dataProvider[idxProvider]
-                                  [DBHelper.columnSno],
-                            );
-                          },
-                        );
-                      },
-                      bgColor: Colors.greenAccent,
-                      text: "Edit",
-                    )
-                  ],
-                ),
-              ],
-            ),
-      floatingActionButton: Align(
-        alignment: const Alignment(0.9, 0.94),
-        child: FloatingActionButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return const CustomBottomSheet();
-              },
-              isScrollControlled: true,
-              elevation: 3,
-              constraints: const BoxConstraints(maxHeight: 550),
-              shape: const RoundedRectangleBorder(
-                side: BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
+                  ),
+                  const SizedBox(height: 25),
+                  // Navigation Controls
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        IconButton.filledTonal(
+                          onPressed: idxProvider > 0
+                              ? () {
+                                  _carouselController.previousPage(
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut,
+                                  );
+                                }
+                              : null,
+                          icon: const Icon(Icons.arrow_back_rounded),
+                          tooltip: "Previous",
+                        ),
+                        const SizedBox(width: 20),
+                        Text(
+                          "${idxProvider + 1} / ${dataProvider.length}",
+                          style: TextStyle(
+                              color: Colors.grey[700],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                        const SizedBox(width: 20),
+                        IconButton.filledTonal(
+                          onPressed: idxProvider < dataProvider.length - 1
+                              ? () {
+                                  _carouselController.nextPage(
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut,
+                                  );
+                                }
+                              : null,
+                          icon: const Icon(Icons.arrow_forward_rounded),
+                          tooltip: "Next",
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: CustomButton(
+                            onPressed: () {
+                              if (dataProvider.isEmpty ||
+                                  idxProvider >= dataProvider.length) {
+                                return;
+                              }
+
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomDialog(
+                                    onPress: () async {
+                                      await context
+                                          .read<DBProvider>()
+                                          .deleteData(
+                                              sno: dataProvider[idxProvider]
+                                                  [DBHelper.columnSno]);
+
+                                      if (context.mounted) {
+                                        Navigator.pop(context);
+                                        _showSnackBar(
+                                            "Card deleted successfully",
+                                            Colors.redAccent);
+
+                                        // Adjust index safely
+                                        final newLen = context
+                                            .read<DBProvider>()
+                                            .allData
+                                            .length;
+                                        if (idxProvider >= newLen &&
+                                            newLen > 0) {
+                                          context
+                                              .read<IndexProvider>()
+                                              .updateIdx(newLen - 1);
+                                        } else if (newLen == 0) {
+                                          context
+                                              .read<IndexProvider>()
+                                              .updateIdx(0);
+                                        }
+                                      }
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                            text: "Delete",
+                            icon: Icons.delete_outline,
+                            bgColor: Colors.red.shade100,
+                            textColor: Colors.red.shade900,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: CustomButton(
+                            onPressed: () {
+                              if (dataProvider.isEmpty ||
+                                  idxProvider >= dataProvider.length) {
+                                return;
+                              }
+
+                              showModalBottomSheet(
+                                context: context,
+                                elevation: 5,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) {
+                                  return CustomBottomSheet(
+                                    isEdit: true,
+                                    que: dataProvider[idxProvider]
+                                        [DBHelper.columnQuestion],
+                                    ans: dataProvider[idxProvider]
+                                        [DBHelper.columnAnswer],
+                                    sno: dataProvider[idxProvider]
+                                        [DBHelper.columnSno],
+                                  );
+                                },
+                              ).then((_) {
+                                // Optional: Refresh or show message if needed
+                              });
+                            },
+                            bgColor: Colors.indigo.shade100,
+                            textColor: Colors.indigo.shade900,
+                            text: "Edit",
+                            icon: Icons.edit_outlined,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
-            );
-          },
-          shape: RoundedRectangleBorder(
-              side: const BorderSide(color: Colors.black),
-              borderRadius: BorderRadius.circular(10)),
-          backgroundColor: Colors.greenAccent,
-          child: const Icon(
-            Icons.add,
-            size: 35,
-            color: Colors.black87,
-          ),
-        ),
+            ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) {
+              return const CustomBottomSheet();
+            },
+          );
+        },
+        backgroundColor: Colors.indigo,
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.add),
+        label: const Text("Add Card"),
       ),
     );
   }

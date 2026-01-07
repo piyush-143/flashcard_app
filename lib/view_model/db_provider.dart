@@ -9,33 +9,45 @@ class DBProvider with ChangeNotifier {
   List<Map<String, dynamic>> get allData => _allData;
 
   Future<void> getInitialData() async {
-    //await Future.delayed(const Duration(milliseconds: 10));
-    _allData = await _dbRef.getAllData();
-    notifyListeners();
+    try {
+      _allData = await _dbRef.getAllData();
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Error fetching data: $e");
+    }
   }
 
   Future<void> addData({required String ques, required String ans}) async {
-    bool check = await _dbRef.addFlashCard(ques: ques, ans: ans);
-    if (check) {
-      _allData = await _dbRef.getAllData();
-      notifyListeners();
+    try {
+      bool check = await _dbRef.addFlashCard(ques: ques, ans: ans);
+      if (check) {
+        await getInitialData();
+      }
+    } catch (e) {
+      debugPrint("Error adding data: $e");
     }
   }
 
   Future<void> updateData(
       {required String ques, required String ans, required int sno}) async {
-    bool check = await _dbRef.updateFlashCard(ques: ques, ans: ans, sno: sno);
-    if (check) {
-      _allData = await _dbRef.getAllData();
-      notifyListeners();
+    try {
+      bool check = await _dbRef.updateFlashCard(ques: ques, ans: ans, sno: sno);
+      if (check) {
+        await getInitialData();
+      }
+    } catch (e) {
+      debugPrint("Error updating data: $e");
     }
   }
 
   Future<void> deleteData({required int sno}) async {
-    bool check = await _dbRef.deleteFlashCard(sno: sno);
-    if (check) {
-      _allData = await _dbRef.getAllData();
-      notifyListeners();
+    try {
+      bool check = await _dbRef.deleteFlashCard(sno: sno);
+      if (check) {
+        await getInitialData();
+      }
+    } catch (e) {
+      debugPrint("Error deleting data: $e");
     }
   }
 }
